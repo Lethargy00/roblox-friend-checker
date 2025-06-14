@@ -33,14 +33,14 @@
     <div class="bg-[#FFE1E6] m-4 p-4 rounded-xl flex flex-wrap justify-around">
         <div class="flex gap-2">
             <input type="text" id="userId1" class="bg-[#BA7A7C] p-2 focus:outline-2 focus:outline-[#804151] rounded-xl"
-                pattern="[0-9]" placeholder="User ID">
+                pattern="[0-9]" placeholder="username">
             <button onclick="getFriends()"
                 class="bg-[#FFC1C9] hover:bg-[#D4969E] hover:cursor-pointer p-2 px-4 rounded-xl">Search
                 Friends</button>
         </div>
         <div id="secondInputSection" class="flex gap-2">
             <input type="text" id="userId2" class="bg-[#BA7A7C] p-2 focus:outline-2 focus:outline-[#804151] rounded-xl"
-                pattern="[0-9]" placeholder="Friend's User ID">
+                pattern="[0-9]" placeholder="Friend's username">
             <button onclick="checkFriend()"
                 class="bg-[#FFC1C9] hover:bg-[#D4969E] hover:cursor-pointer  p-2 px-4 rounded-xl">Check for
                 Match</button>
@@ -155,7 +155,7 @@
 
 
             if (!userId) {
-                alert('Please enter a valid user ID.');
+                alert('Please enter a valid username.');
                 return;
             }
 
@@ -214,7 +214,7 @@
                 })
                 .catch(error => {
                     console.error('Error fetching friends:', error);
-                    resultDiv.innerText = 'Error fetching friends. Check the user ID and try again.';
+                    resultDiv.innerText = 'Error fetching friends. Check the username and try again.';
                 });
         }
 
