@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="./css/styles.css">
 </head>
 
-<body class="bg-[#FFC1C9] flex flex-col text-[#804151]">
+<body id="body" class="bg-[#FFC1C9] flex flex-col text-[#804151]">
 
     <header>
         <h1 class="text-center text-5xl font-bold mb-8 mt-8">Roblox Friend Checker</h1>
@@ -19,16 +19,40 @@
 
     <div class="bg-[#FFE1E6] m-4 p-4 rounded-xl flex flex-wrap justify-around">
         <div class="flex gap-2">
-            <input type="text" id="userId1" class="bg-[#BA7A7C] p-2 focus:outline-2 focus:outline-[#804151] rounded-xl"
-                pattern="[0-9]" placeholder="username">
-            <button onclick="getFriends()"
+            <div class="relative">
+                <input type="text" id="userId1"
+                    class="bg-[#BA7A7C] p-2 focus:outline-2 focus:outline-[#804151] rounded-xl " pattern="[0-9]"
+                    placeholder="Username"></input>
+                <svg viewBox="0 0 16 16" id="usernameInputLoadingIcon" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    class="loading h-6 w-6 absolute right-1 top-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden">
+                    <g fill="#87474E" fill-rule="evenodd" clip-rule="evenodd">
+                        <path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8z"
+                            opacity=".2" />
+                        <path
+                            d="M7.25.75A.75.75 0 018 0a8 8 0 018 8 .75.75 0 01-1.5 0A6.5 6.5 0 008 1.5a.75.75 0 01-.75-.75z" />
+                    </g>
+                </svg>
+            </div>
+            <button id="searchUsernameButton" onclick="getFriends()"
                 class="bg-[#FFC1C9] hover:bg-[#D4969E] hover:cursor-pointer p-2 px-4 rounded-xl">Search
                 Friends</button>
         </div>
         <div id="secondInputSection" class="flex gap-2">
-            <input type="text" id="userId2" class="bg-[#BA7A7C] p-2 focus:outline-2 focus:outline-[#804151] rounded-xl"
-                pattern="[0-9]" placeholder="Friend's username">
-            <button onclick="checkFriend()"
+            <div class="relative">
+                <input type="text" id="userId2"
+                    class="bg-[#BA7A7C] p-2 focus:outline-2 focus:outline-[#804151] rounded-xl" pattern="[0-9]"
+                    placeholder="Friend's username">
+                <svg viewBox="0 0 16 16" id="friendInputLoadingIcon" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    class="loading h-6 w-6 absolute right-1 top-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden">
+                    <g fill="#87474E" fill-rule="evenodd" clip-rule="evenodd">
+                        <path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8z"
+                            opacity=".2" />
+                        <path
+                            d="M7.25.75A.75.75 0 018 0a8 8 0 018 8 .75.75 0 01-1.5 0A6.5 6.5 0 008 1.5a.75.75 0 01-.75-.75z" />
+                    </g>
+                </svg>
+            </div>
+            <button id="checkFriendButton" onclick="checkFriend()"
                 class="bg-[#FFC1C9] hover:bg-[#D4969E] hover:cursor-pointer  p-2 px-4 rounded-xl">Check for
                 Match</button>
         </div>
@@ -39,43 +63,20 @@
         friends.</p>
 
     <div id="result-header" class="bg-[#FFE1E6] mx-4 mb-4 p-4 rounded-xl grid grid-cols-3 hidden">
-        <div>Name</div>
+        <div>Username</div>
         <div>Display Name</div>
         <div>ID</div>
     </div>
 
-
     <svg viewBox="0 0 16 16" id="loading-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
         class="loading h-15 w-15 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden">
-
         <g fill="#87474E" fill-rule="evenodd" clip-rule="evenodd">
-
             <path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8z" opacity=".2" />
-
             <path d="M7.25.75A.75.75 0 018 0a8 8 0 018 8 .75.75 0 01-1.5 0A6.5 6.5 0 008 1.5a.75.75 0 01-.75-.75z" />
-
         </g>
-
     </svg>
 
     <div id="result" class="bg-[#FFE1E6] mx-4 p-4 rounded-xl grid grid-cols-3 max-h-[60vh] overflow-y-auto hidden">
-
-        <!-- <div>RixityRick</div>
-        <div>RixityRick</div>
-        <div>72393075</div>
-        <div>RixityRick</div>
-        <div>RixityRick</div>
-        <div>72393075</div>
-        <div>RixityRick</div>
-        <div>RixityRick</div>
-        <div>72393075</div>
-        <div>RixityRick</div>
-        <div>RixityRick</div>
-        <div>72393075</div>
-        <div>RixityRick</div>
-        <div>RixityRick</div>
-        <div>72393075</div> -->
-
 
     </div>
 
@@ -83,6 +84,7 @@
         class="bg-black/30 w-[100vw] h-[100vh] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer hidden">
 
     </div>
+
 
     <div id="friend-match"
         class="bg-[#FFE1E6] p-16 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-xl flex items-center justify-center hidden">

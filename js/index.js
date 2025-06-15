@@ -1,10 +1,34 @@
 let resolvedUserId = null;
-const searchInput = document.getElementById("userId1");
-searchInput.addEventListener("input", debounce(handleInput, 300));
-const secondSearchInput = document.getElementById("secondInputSection");
-secondSearchInput.addEventListener("input", debounce(handleInput, 300));
 
-function handleInput(event) {
+const searchInput = document.getElementById("userId1");
+searchInput.addEventListener(
+  "input",
+  debounce((event) => handleInput("usernameInputLoadingIcon", event), 300)
+);
+searchInput.addEventListener("keypress", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+
+    document.getElementById("searchUsernameButton").click();
+  }
+});
+
+const secondSearchInput = document.getElementById("secondInputSection");
+secondSearchInput.addEventListener(
+  "input",
+  debounce((event) => handleInput("friendInputLoadingIcon", event), 300)
+);
+secondSearchInput.addEventListener("keypress", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+
+    document.getElementById("checkFriendButton").click();
+  }
+});
+
+let friendsList = [];
+
+async function handleInput(loadingSvgId, event) {
   const query = event.target.value;
 
   let body = {
@@ -13,11 +37,15 @@ function handleInput(event) {
   };
 
   if (query.length > 0) {
-    fetch("https://corsproxy.io/?https://users.roblox.com/v1/usernames/users", {
-      method: "POST",
-      headers: {},
-      body: JSON.stringify(body),
-    })
+    document.getElementById(loadingSvgId).style.display = "block";
+    await fetch(
+      "https://corsproxy.io/?https://users.roblox.com/v1/usernames/users",
+      {
+        method: "POST",
+        headers: {},
+        body: JSON.stringify(body),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data.data && data.data.length > 0) {
@@ -26,8 +54,7 @@ function handleInput(event) {
           resolvedUserId = null;
         }
       });
-  } else {
-    resultsDiv.innerHTML = "";
+    document.getElementById(loadingSvgId).style.display = "none";
   }
 }
 
@@ -39,11 +66,7 @@ function debounce(func, delay) {
   };
 }
 
-let friendsList = [];
-const resultDiv = document.getElementById("result");
-
-function getFriends() {
-  resultDiv.innerText = "";
+async function getFriends() {
   const userId = resolvedUserId;
 
   if (!userId) {
@@ -54,7 +77,9 @@ function getFriends() {
   const loadingDiv = document.getElementById("loading-svg");
   loadingDiv.style.display = "block";
 
-  fetch(
+  const resultCount = document.getElementById("result-count");
+  const resultDiv = document.getElementById("result");
+  await fetch(
     `https://corsproxy.io/?https://friends.roblox.com/v1/users/${userId}/friends/`
   )
     .then((response) => response.json())
@@ -66,13 +91,19 @@ function getFriends() {
           "result-count-paragraph"
         );
 
+        document.getElementById("loading-svg").style.display = "none";
+        document.getElementById("result-count-paragraph").style.display =
+          "block";
+        document.getElementById("result").style.display = "none";
+        document.getElementById("result-header").style.display = "none";
         resultCountParagraph.innerHTML = "No friends found for this user.";
       } else {
-        const resultCount = document.getElementById("result-count");
-
         resultCount.innerText = friendsList.length;
 
         let number = 0;
+
+        // Clear the list
+        resultDiv.innerHTML = "";
 
         friendsList.forEach((friend) => {
           const tableCell1HTML = document.createElement("div");
@@ -99,12 +130,12 @@ function getFriends() {
 
           number++;
         });
-        document.getElementById("loading-svg").style.display = "none";
-        document.getElementById("result").style.display = "grid";
-        document.getElementById("result-header").style.display = "grid";
         document.getElementById("result-count-paragraph").style.display =
           "block";
+        document.getElementById("result").style.display = "grid";
+        document.getElementById("result-header").style.display = "grid";
         document.getElementById("secondInputSection").style.display = "flex";
+        document.getElementById("loading-svg").style.display = "none";
       }
     })
     .catch((error) => {
@@ -135,10 +166,35 @@ function checkFriend() {
     friendMatch.innerHTML = matchHtml;
   }
 
-  document.getElementById("secondInputSection").style.display = "block";
+  document.getElementById("secondInputSection").style.display = "flex";
 }
 
 function closeFriendMatch() {
   document.getElementById("friend-match").style.display = "none";
   document.getElementById("dark-background").style.display = "none";
 }
+
+// function createResultDiv() {
+//   if (document.getElementById("result") != null) {
+//     removeResultDiv();
+//   }
+//   const resultDiv = document.createElement("div");
+//   resultDiv.setAttribute("id", "result");
+//   resultDiv.classList.add(
+//     "bg-[#FFE1E6]",
+//     "mx-4",
+//     "p-4",
+//     "rounded-xl",
+//     "grid",
+//     "grid-cols-3",
+//     "max-h-[60vh]",
+//     "overflow-y-auto",
+//     "grid"
+//   );
+
+//   document.getElementById("body").appendChild(resultDiv);
+// }
+
+// function removeResultDiv() {
+//   document.getElementById("result").remove();
+// }
